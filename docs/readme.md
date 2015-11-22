@@ -16,4 +16,4 @@
 
 ## Tasks for Sprint 1
 
--   [ ] Serve SPA
+-   [x] Serve SPA
