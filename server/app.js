@@ -35,6 +35,10 @@ function setup() {
   })
 
   ////////
+  // Static
+  app.use(express.static(path.resolve(__dirname, '../dist')))
+
+  ////////
   // SPA
   app.use(function (req, res) {
     res.render('index.html', {pkg})
