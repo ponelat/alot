@@ -17,3 +17,4 @@
 ## Tasks for Sprint 1
 
 -   [x] Serve SPA
+-   [ ] Render react
