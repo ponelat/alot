@@ -14,3 +14,6 @@
   - How many are there?
   - How many contain the word 'free'?
 
+## Tasks for Sprint 1
+
+-   [ ] Serve SPA
