@@ -18,3 +18,5 @@
 
 -   [x] Serve SPA
 -   [x] Render react
+-   [x] create skeleton UI
+-   [ ] add state 

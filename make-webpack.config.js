@@ -25,14 +25,16 @@ module.exports = function(override) {
     },
     'json': {
       loader: 'json-loader'
-    }
+    },
+    'png|jpg|jpeg|gif|svg': 'url-loader?limit=10000',
   }, special.loaders || {})
 
   return deepExtend({
     resolve: {
       alias: {
-        js: path.resolve(__dirname, 'src/js'),
-        comp: path.resolve(__dirname, 'src/components'),
+        js: path.resolve('src/js'),
+        comp: path.resolve('src/components'),
+        img: path.resolve('src/img'),
       },
       extensions: ['', 'webpack.js', 'web.js', '.js', '.jsx']
     },
