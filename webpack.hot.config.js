@@ -7,7 +7,7 @@ module.exports = makeConfig({
   _special: {
     loaders: {
       'jsx': {
-        loader: "react-hot-loader!babel-loader?stage=0"
+        loader: "react-hot-loader!babel"
       }
     }
   },

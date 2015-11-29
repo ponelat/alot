@@ -4,7 +4,7 @@ import logoPng from 'img/logo.png'
 
 const Banner = () => <img src={logoPng} alt="A Lot Of Dot Coms"/>
 
-const SearchBox = ({onSearch}) => (<div> <input type='text' /> <button onClick={onSearch || ()=> {}}> Search </button></div> )
+const SearchBox = ({onSearch}) => (<div> <input type='text' /> <button onClick={onSearch || function(){}}> Search </button></div> )
 
 const Results = ({results, query}) => {
   let res = results.map( result => {

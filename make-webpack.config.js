@@ -2,6 +2,8 @@ var path = require('path')
 var deepExtend = require('deep-extend')
 var loadersByExt = require('./build-libs/loaders-by-ext')
 
+var babelLoader='babel?presets[]=react,presets[]=es2015'
+
 module.exports = function(override) {
   override = override || {}
   var special = override._special || {}
@@ -14,20 +16,33 @@ module.exports = function(override) {
         path.resolve('./src/js'),
       ],
       exclude: /(node_modules|bower_components)/,
-      loader: 'babel-loader?stage=0'
+      loader: 'babel'
     },
     'jsx': {
       include: [
         path.resolve('./src/components'),
       ],
       exclude: /(node_modules|bower_components)/,
-      loader: 'babel-loader?stage=0'
+      loader: 'babel'
     },
     'json': {
       loader: 'json-loader'
     },
     'png|jpg|jpeg|gif|svg': 'url-loader?limit=10000',
   }, special.loaders || {})
+
+  // Replace babel loader with our settings
+  Object.keys(loadersMap).map(function (loaderKey) {
+    var loader = loadersMap[loaderKey]
+    var loaderStr = loader.loader || loader
+    if(/(?!babel\?)babel/.test(loaderStr)) {
+      var str = loaderStr.replace('babel', babelLoader)
+      if(loader.loader) 
+        loader.loader = str
+      else
+        loadersMap[loaderKey] = str
+    }
+  })
 
   return deepExtend({
     resolve: {
