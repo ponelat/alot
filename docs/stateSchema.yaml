@@ -1,0 +1,33 @@
+# schema
+query: 
+  type: string
+results: 
+  type: array
+  items: 
+    type: string
+
+# state
+query: asd
+results: 
+  - as
+  - asd
+  - fff
+
+# meta state
+results:
+  state: complete | pending | failed
+  invalidated: false
+
+# actual state file...
+#
+
+data: 
+  query: asd
+  results: 
+    - as
+    - asd
+    - fff
+meta: 
+  results:
+    currently: complete | pending | failed
+    invalidated: false

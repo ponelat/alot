@@ -1,0 +1,10 @@
+comQuery:
+  query: '(.*)/$1'
+  state: pending | error | success | null
+  error: Message?
+  matches: 
+    - pone
+    - ponel
+    - ponelat
+
+# search :: String -> Observable( [String], Error )
