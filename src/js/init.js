@@ -1,8 +1,7 @@
-import ReactDOM from 'react-dom'
-import React from 'react'
-import App from 'comp/app'
+import 'babel-polyfill'
+import render from 'comp/render'
 
 // Render the app
 window.onload = ()=> {
-  ReactDOM.render(<App/>, document.getElementById('bundle'))
+  render(document.getElementById('bundle'))
 }

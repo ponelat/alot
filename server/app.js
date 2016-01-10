@@ -38,6 +38,8 @@ function setup() {
   // Static
   app.use(express.static(path.resolve(__dirname, '../dist')))
 
+  app.use('/com', require('./com-search'))
+
   ////////
   // SPA
   app.use(function (req, res) {
