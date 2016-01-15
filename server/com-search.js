@@ -15,27 +15,42 @@ module.exports = {
 
 var comsFile = 'coms'
 var comsData 
+const PAGE_SIZE = 10
 
 ///////////////////////////////
 
 // Just so that the deploy server knows we're live :)
 app.use('/:regex', function(req, res, next){
   var regStr = req.params.regex
-  searchComs(regStr, function (err, results) {
+  var page = req.query.page || '0'
+  page = +page
+
+  searchComs({str: regStr, page}, function (err, results) {
     if(err)
       return res.status(500).send(err)
     return res.status(200).send(results)
   })
 })
 
-function searchComs(str,done) {
+function searchComs(opts,done) {
   ensureComs(function (err, coms) {
+
     if(err) return done(err)
-    log('Searching with "' + str + '"')
-    var reg = new Re2(str || '$^', 'i')
-    var results = coms.filter( c => reg.test(c) )
-    results = results.map(r => r.toString())
-    return done(null, results.length > 0 ? results : ['none'])
+
+    log('Searching with "' + opts.str + '"')
+
+    var reg = new Re2(opts.str || '$^', 'i')
+    var results = coms.filter( c => reg.test(c) ).map(r => r.toString())
+    var total = results.length
+    var sliced = results.slice(opts.page * PAGE_SIZE, opts.page * PAGE_SIZE + PAGE_SIZE)
+    var payload = {
+      results: sliced,
+      totalResults: total,
+      page: opts.page,
+      str: opts.str,
+      pageSize: PAGE_SIZE
+    }
+    return done(null, payload)
       
   })
 }

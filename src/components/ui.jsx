@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
 export class SearchBox extends React.Component {
   render() {
@@ -29,3 +29,43 @@ export class Checkbox extends React.Component {
     )
   }
 }
+
+export class Pager extends React.Component {
+
+  selectPage(i) {
+    this.props.onChange(i)
+  }
+
+  render() {
+    let { pageSize, total, page }  = this.props
+    let pages = Array.from({length: Math.ceil(total / pageSize)})
+    return (
+      <ul style={Pager.styles.ul}>
+        { pages.map((val, i) => {
+          return (
+            <li style={Pager.styles.li} key={i}>
+              <Button style={{backgroundColor: page === i ? '#eee' : '#aaa'}} onClick={() => this.selectPage(i)}>{i}</Button>
+            </li>
+          )
+        }) }
+      </ul>
+    )
+  }
+}
+
+Pager.propTypes ={
+  pageSize: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired
+}
+
+Pager.styles = {
+  ul: {
+    listStyleType: 'none'
+  },
+  li: {
+    display: 'inline'
+  }
+}
+

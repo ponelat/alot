@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import Qs from 'qs'
 import { createAction } from 'redux-actions'
 
 // export contstant name
@@ -12,36 +13,22 @@ export const RECEIVE_RESULTS = 'RECEIVE_RESULTS'
 
 export const receiveResults = createAction(RECEIVE_RESULTS)
 
-
-// export thunkActions, which return a fn => dispatch -> getState -> "should call dispatch" 
-// export function query(str) {
-//   return (dispatch, getState) => {
-//     if (shouldFetchPosts(getState(), reddit)) {
-//       return dispatch(fetchPosts(reddit))
-//     }
-//   }
-// }
-
+/**
+ * I am expecting the model defined in this published swagger spec
+ * @swagger({url: './swagger.json'})
+ * @client
+ * @version 0.0.1
+ * @GET /coms 
+ */
 // Async example... dispatch(before) + fetch.then(dispatch(after))
-export function fetchComs(str) {
-  return dispatch => {
-    // dispatch(requestPosts(reddit))
-    return fetch('/com/' + str)
+export function fetchComs({str, page}) {
+  return (dispatch, getState) => {
+    str = str ? str : getState().coms.str
+    console.log('getState()', getState())
+    console.log('str', str)
+    return fetch('/com/' + str + '?' + Qs.stringify({page}))
       .then(response => response.json())
       .then(json => dispatch(receiveResults({str, json})))
   }
 }
-
-// // state query fn... do they belong here?
-// punction shouldFetchPosts(state, reddit) {
-//   const posts = state.postsByReddit[reddit]
-//   if (!posts) {
-//     return true
-//   }
-//   if (posts.isFetching) {
-//     return false
-//   }
-//   return posts.didInvalidate
-// }
-
 
