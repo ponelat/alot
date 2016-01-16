@@ -3,8 +3,6 @@ FROM node
 RUN apt-get update
 RUN apt-get install -y build-essential
 
-VOLUME ~/.npm
-
 RUN mkdir -p /usr/app/
 COPY ./package.json /usr/app/package.json
 WORKDIR /usr/app
