@@ -1,5 +1,12 @@
 import React, { PropTypes } from 'react'
 
+const images = {
+  al: require('img/Pager-v2_03.gif'),
+  o: require('img/Pager-v2_04.png'),
+  o_selected: require('img/Pager-v2_05.gif'),
+  ot: require('img/Pager-v2_06.gif')
+}
+
 export class SearchBox extends React.Component {
   render() {
     return (
@@ -32,40 +39,79 @@ export class Checkbox extends React.Component {
 
 export class Pager extends React.Component {
 
+  constructor(props) {
+    super(props)
+  }
+
   selectPage(i) {
+    if(this.props.page === i)
+      return
     this.props.onChange(i)
   }
 
   render() {
     let { pageSize, total, page }  = this.props
-    let pages = Array.from({length: Math.ceil(total / pageSize)})
+    let pages = Math.ceil(total / pageSize)
+    let showPages = Array.from({length: pages})
+    let pageSelectors = Math.min(pages, this.props.visiblePages)
+    let offsetPage = page - (page % pageSelectors)
+    let modPage = page % pageSelectors
     return (
-      <ul style={Pager.styles.ul}>
-        { pages.map((val, i) => {
-          return (
-            <li style={Pager.styles.li} key={i}>
-              <Button style={{backgroundColor: page === i ? '#eee' : '#aaa'}} onClick={() => this.selectPage(i)}>{i}</Button>
-            </li>
-          )
-        }) }
-      </ul>
+      <div>
+        <div style={Pager.styles.div} key={'prev'}>
+          <a href="#" onClick={ e => { e.preventDefault(); this.selectPage(Math.max(page-1,0))} } >
+            <img src={images.al} />
+            <span style={Pager.styles.linkText}>prev</span>
+          </a>
+        </div>
+
+        {
+          n(pageSelectors).map((val, i) => {
+            return (
+              <div style={Pager.styles.div} key={i}>
+                <a href="#" onClick={ e => { e.preventDefault(); this.selectPage(offsetPage + i)} } >
+                  <img src={i === modPage ? images.o_selected : images.o} />
+                  <span style={Pager.styles.linkText}>{i}</span>
+                </a>
+              </div>
+              )
+          }) 
+        }
+
+        <div style={Pager.styles.div} key={'next'}>
+          <a href="#" onClick={ e => { e.preventDefault(); this.selectPage(Math.min(page+1, pages-1))} } >
+            <img src={images.ot} />
+            <span style={Pager.styles.linkText}>next</span>
+          </a>
+        </div>
+      </div>
     )
   }
+}
+
+function n(num) {
+  return new Array.from(({length: num}))
 }
 
 Pager.propTypes ={
   pageSize: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
+  visiblePages: PropTypes.number,
   onChange: PropTypes.func.isRequired
 }
 
+Pager.defaultProps ={
+  visiblePages: 7
+}
+
 Pager.styles = {
-  ul: {
-    listStyleType: 'none'
+  linkText: {
+    display: 'block',
+    textAlign: 'center'
   },
-  li: {
-    display: 'inline'
+  div: {
+    display: 'inline-block'
   }
 }
 
