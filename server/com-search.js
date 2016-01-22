@@ -9,7 +9,8 @@ var app = express()
 module.exports = {
   app,
   searchComs,
-  ensureComs
+  ensureComs,
+  searchBuffer
 }
 
 
@@ -64,6 +65,11 @@ function ensureComs(done) {
     comsData = bufferSplit(data, new Buffer('\n'))
     done(null,comsData)
   })
+}
+
+function searchBuffer(str, buf) {
+  var reg = new Re2(str, 'g')
+  return reg.match(buf)
 }
 
 function log(msg) {
