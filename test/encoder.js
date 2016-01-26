@@ -26,7 +26,7 @@ describe('encode', function(){
 
   it('should handle the smallest case of four bytes', function(){
     var str = 'abcd'
-    var encoded = DomainZip.encodeFromAscii(str)
+    var encoded = DomainZip.encodeFromAscii(new Buffer(str))
     expect(str.length).toEqual(4)
     expect(encoded.length).toEqual(3)
 
@@ -35,7 +35,7 @@ describe('encode', function(){
 
   xit('should handle non-multiples of 4', function(){
     var str = '12345'
-    var encoded = DomainZip.encodeFromAscii(str)
+    var encoded = DomainZip.encodeFromAscii(new Buffer(str))
     expect(str.length).toEqual(5)
     expect(encoded.length).toEqual(6)
 
@@ -43,13 +43,13 @@ describe('encode', function(){
   })
 
   it('should reduce the buffer by 0.75', function(){
-    var encoded = DomainZip.encodeFromAscii(STR)
+    var encoded = DomainZip.encodeFromAscii(new Buffer(STR))
     expect(STR.length).toEqual(100)
     expect(encoded.length).toEqual(75)
   })
 
   it('should loose no data', function(){
-    var encoded = DomainZip.encodeFromAscii(As)
+    var encoded = DomainZip.encodeFromAscii(new Buffer(As))
     expect(As.length).toEqual(100)
     expect(DomainZip.decodeToAscii(encoded).toString('ascii')).toEqual(As)
   })

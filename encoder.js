@@ -61,8 +61,11 @@ function compress(buf) {
  * [1111 1100] [0000 1111] [1100 0000] [xxxx xxxx]
  */
 function encodeFromAscii(buf) {
-  var newBuf = new Buffer(buf, {encoding: null})
-  var rawBuf = new Buffer(buf, {encoding: null})
+  if(!(buf instanceof Buffer))
+    throw new Error('encodeFromAscii: Can only handle Buffers')
+
+  var newBuf = buf.slice()
+  var rawBuf = buf.slice()
   var counter = 0
   for (var i = 0, len = rawBuf.length; i < len; i += 4) {
 
@@ -81,7 +84,7 @@ function encodeFromAscii(buf) {
 
 function numDump(name, num) {
   num = num || name
-  console.log(name +'\t', printBin(num), '\t', num.toString(16), '\t', num.toString(10))
+  console.log(name +'\t', printBin(num), '\t', num.toString(16), '\t', num.toString(10), '"' + String.fromCharCode(num) +'"')
 }
 function printBin(num) {
   var str = '00000000'.concat(num.toString(2))
@@ -97,8 +100,10 @@ function printBin(num) {
  * [1111 1100] [0000 1111] [1100 0000] [xxxx xxxx]
  */
 function decodeToAscii(buf) {
+  if(!(buf instanceof Buffer))
+    throw new Error('decodeToAscii: can only handle Buffers')
   var nb = new Buffer(((buf.length * 4) / 3))
-  var rawBuf = new Buffer(buf, {encoding: null})
+  var rawBuf = buf.slice()
   var nbi = 0
   for (var i = 0, len = rawBuf.length; i < len; i += 3) {
 
