@@ -4,7 +4,7 @@ var through2 = require('through2')
 const EMPTY = 0
 const HYPHEN = 45
 const DIGITS = [48,57]
-const NEWLINE = 74
+const NEWLINE = 10
 const LOWERCASE = [97,122]
 
 const LOW_SIX_BITS = 0x3f
@@ -67,12 +67,19 @@ function encodeFromAscii(buf) {
   var newBuf = buf.slice()
   var rawBuf = buf.slice()
   var counter = 0
-  for (var i = 0, len = rawBuf.length; i < len; i += 4) {
+  var len = rawBuf.length
 
-    var one = CHARSET.indexOf(rawBuf[i])
+  for (var i = 0; i < len; i += 4) {
+
+    var one = CHARSET.indexOf(rawBuf[i]) 
     var two = CHARSET.indexOf(rawBuf[i+1])
     var three = CHARSET.indexOf(rawBuf[i+2])
     var four = CHARSET.indexOf(rawBuf[i+3])
+
+    one = one >= 0 ? one : 0
+    two = two >= 0 ? two : 0
+    three = three >= 0 ? three : 0
+    four = four >= 0 ? four : 0
 
     newBuf[counter++] = ( 0xff & ((one << 2)   | (two >>> 4)))
     newBuf[counter++] = ( 0xff & ((two << 4)   | (three >>> 2)))
@@ -102,6 +109,7 @@ function printBin(num) {
 function decodeToAscii(buf) {
   if(!(buf instanceof Buffer))
     throw new Error('decodeToAscii: can only handle Buffers')
+
   var nb = new Buffer(((buf.length * 4) / 3))
   var rawBuf = buf.slice()
   var nbi = 0
@@ -117,7 +125,14 @@ function decodeToAscii(buf) {
     nb[nbi++] = CHARSET[three & LOW_SIX_BITS]
 
   }
-  return nb.slice(0,nbi)
+
+  // trim padding 0's
+  var padding = 0
+  nb[nbi-3] == 0 && padding++
+  nb[nbi-2] == 0 && padding++
+  nb[nbi-1] == 0 && padding++
+  nb[nbi] == 0 && padding++
+  return nb.slice(0, nbi -padding)
 }
 
 /**
@@ -145,11 +160,12 @@ function decodeFile(file, outfile) {
 
 
 function encodeChunk(chunk, enc, done) {
-  var newBuff = new Buffer(chunk.length / 2)
+  chunk = encodeFromAscii(chunk)
   done(null, chunk)
 }
 
 function decodeChunk(chunk, enc, done) {
+  chunk = decodeToAscii(chunk)
   done(null, chunk)
 }
 
